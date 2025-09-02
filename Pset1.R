@@ -61,4 +61,7 @@ geih_data_i <- geih_data %>%
 
 geih_data_i %>% select(y_salary_m_hu,y_salary_m_hu_i) %>% view()
 
+skim(geih_data_i$clase)
+
+sum(geih_data_i$clase == 0, na.rm = TRUE)
 

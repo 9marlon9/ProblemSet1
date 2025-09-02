@@ -60,3 +60,48 @@ if dataframes:
     
 else:
     print("No se pudieron leer datos de ninguna página")
+
+# =============================================================================
+# 2. LIMPIEZA Y PREPROCESAMIENTO DE DATOS
+# =============================================================================
+import pandas as pd
+import os
+
+def filter_age_ge_18_and_employed(input_path, output_path):
+    # Leer el archivo CSV
+    df = pd.read_csv(input_path)
+    
+    # Filtrar: edad >= 18 Y empleados (ocu == 1)
+    df_filtered = df[(df['age'] >= 18) & (df['ocu'] == 1)]
+    
+    # Crear directorio si no existe
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    
+    # Guardar el resultado
+    df_filtered.to_csv(output_path, index=False)
+    print(f"Archivo filtrado guardado en: {output_path}")
+    print(f"Filas originales: {len(df)}")
+    print(f"Filas después del filtro: {len(df_filtered)}")
+
+if __name__ == "__main__":
+    input_csv = "geih_data/GEIH2018_completo.csv"
+    output_csv = "geih_data/GEIH2018_age_employed_filtered.csv"
+    filter_age_ge_18_and_employed(input_csv, output_csv)
+
+
+# =============================================================================
+# 2. Base de datos con variables relevantes
+# =============================================================================
+import pandas as pd
+# Variables que quieres conservar
+variables = ['y_salary_m_hu', 'sex', 'age', 'maxeduclevel', 'sizefirm','depto','hoursworkusual','cuentapropia','totalhoursworked','estrato1', 'relab','reg_salud', 'formal']
+
+# Leer el CSV filtrado y conservar solo las variables especificadas
+df = pd.read_csv("geih_data/GEIH2018_age_employed_filtered.csv")
+df_filtered = df[variables]
+
+# Guardar el nuevo CSV con solo las variables seleccionadas
+df_filtered.to_csv("geih_data/GEIH2018_filterVariab.csv", index=False)
+
+
+
