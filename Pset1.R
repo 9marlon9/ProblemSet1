@@ -65,3 +65,5 @@ skim(geih_data_i$clase)
 
 sum(geih_data_i$clase == 0, na.rm = TRUE)
 
+#Punto 3
+
