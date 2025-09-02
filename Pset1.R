@@ -9,8 +9,8 @@ geih_data <- read_csv("https://raw.githubusercontent.com/9marlon9/ProblemSet1/re
 #Análisis descriptivo (variable de salario por hora):
 
 skim(geih_data$y_salary_m_hu)
-#14.676 missing 
-#7.949 salario promedio por hora
+#6.650 missing 
+#7.946 salario promedio por hora
 #11.607 desviación
 #Mediana: 4.476
 #Min: 152
@@ -44,15 +44,21 @@ ggplot(geih_data, aes(x = y_salary_m_hu)) +
   # Rotar texto para mejor visualización
   ggplot2::theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+skim(geih_data$totalhoursworked)
+min(geih_data$totalhoursworked)
+
+#Análisis de missing values
+
+names(geih_data)
 
 #Método de imputación (opción 1):
 #Debido a la asimetría positiva, se imputa con base a la mediana.
-
 
 geih_data_i <- geih_data %>%
   mutate(y_salary_m_hu_i = ifelse(is.na(y_salary_m_hu), 
                                  median(y_salary_m_hu, na.rm = TRUE), 
                                  y_salary_m_hu))
 
+geih_data_i %>% select(y_salary_m_hu,y_salary_m_hu_i) %>% view()
 
 
