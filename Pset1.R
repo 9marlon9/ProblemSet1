@@ -24,6 +24,35 @@ ggplot(geih_data, aes(x = y_salary_m_hu)) +
   scale_x_continuous(labels = comma)
 
 #Debido a la asimetría positiva deberíamos imputar por mediana (4476)
-
+media <- mean(geih_data$y_salary_m_hu,na.rm = TRUE)
 mediana <- median(geih_data$y_salary_m_hu, na.rm = TRUE)
+
+names(geih_data)
+ggplot(geih_data, aes(x = y_salary_m_hu)) +
+  geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
+  geom_vline(aes(xintercept = media), color = "red", linetype = "solid", linewidth = 1) +
+  geom_vline(aes(xintercept = mediana), color = "green", linetype = "dashed", linewidth = 1) +
+  # Escala personalizada para mostrar media y mediana en eje X
+  scale_x_continuous(
+    labels = scales::comma,
+    breaks = sort(c(seq(0, max(geih_data$y_salary_m_hu, na.rm = TRUE), by = 5000),
+                    media, mediana))  # Agrega valores al eje
+  ) +
+  ggplot2::labs(title = "Distribución de Salario (en miles)",
+                x = "Salario (miles)",
+                y = "Frecuencia") +
+  # Rotar texto para mejor visualización
+  ggplot2::theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+#Método de imputación (opción 1):
+#Debido a la asimetría positiva, se imputa con base a la mediana.
+
+
+geih_data_i <- geih_data %>%
+  mutate(y_salary_m_hu_i = ifelse(is.na(y_salary_m_hu), 
+                                 median(y_salary_m_hu, na.rm = TRUE), 
+                                 y_salary_m_hu))
+
+
 
