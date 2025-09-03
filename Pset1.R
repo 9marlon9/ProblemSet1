@@ -1,12 +1,20 @@
+# 0. Configuación inicial ===============================================
+
 install.packages("pacman")
 library(pacman)
 p_load(readr,rio,tidyverse,skimr,visdat, corrplot,stargazer, scales, haven)  
 
+# 1. Importación de datos GitHub ========================================
 
-# Importar datos de GitHub
 geih_data <- read_csv("https://raw.githubusercontent.com/9marlon9/ProblemSet1/refs/heads/main/geih_data/GEIH2018_filterVariab.csv")
 
-#Análisis descriptivo (variable de salario por hora):
+# 2. Análisis descriptivo de la base =====================================
+
+#Variables en la base:
+names(geih_data)
+
+
+# 3. Variable explicada (Y) (Salario por hora) ================================
 
 skim(geih_data$y_salary_m_hu)
 #6.650 missing 
@@ -16,6 +24,11 @@ skim(geih_data$y_salary_m_hu)
 #Min: 152
 #Max: 291.667
 
+media <- mean(geih_data$y_salary_m_hu,na.rm = TRUE)
+mediana <- median(geih_data$y_salary_m_hu, na.rm = TRUE)
+
+#Distribución del salario por hora:
+
 ggplot(geih_data, aes(x = y_salary_m_hu)) +
   geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
   labs(title = "Distribución de Salario",
@@ -23,11 +36,6 @@ ggplot(geih_data, aes(x = y_salary_m_hu)) +
        y = "Frecuencia") +
   scale_x_continuous(labels = comma)
 
-#Debido a la asimetría positiva deberíamos imputar por mediana (4476)
-media <- mean(geih_data$y_salary_m_hu,na.rm = TRUE)
-mediana <- median(geih_data$y_salary_m_hu, na.rm = TRUE)
-
-names(geih_data)
 ggplot(geih_data, aes(x = y_salary_m_hu)) +
   geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
   geom_vline(aes(xintercept = media), color = "red", linetype = "solid", linewidth = 1) +
@@ -44,26 +52,8 @@ ggplot(geih_data, aes(x = y_salary_m_hu)) +
   # Rotar texto para mejor visualización
   ggplot2::theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+# 4. Variables explicativas==========================================
+
+#4.1 Totalhoursworked
 skim(geih_data$totalhoursworked)
 min(geih_data$totalhoursworked)
-
-#Análisis de missing values
-
-names(geih_data)
-
-#Método de imputación (opción 1):
-#Debido a la asimetría positiva, se imputa con base a la mediana.
-
-geih_data_i <- geih_data %>%
-  mutate(y_salary_m_hu_i = ifelse(is.na(y_salary_m_hu), 
-                                 median(y_salary_m_hu, na.rm = TRUE), 
-                                 y_salary_m_hu))
-
-geih_data_i %>% select(y_salary_m_hu,y_salary_m_hu_i) %>% view()
-
-skim(geih_data_i$clase)
-
-sum(geih_data_i$clase == 0, na.rm = TRUE)
-
-#Punto 3
-
