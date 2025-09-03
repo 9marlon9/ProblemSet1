@@ -24,6 +24,9 @@ skim(geih_data$y_salary_m_hu)
 #Min: 152
 #Max: 291.667
 
+skim(geih_data$y_inglab_m_ha)
+
+
 media <- mean(geih_data$y_salary_m_hu,na.rm = TRUE)
 mediana <- median(geih_data$y_salary_m_hu, na.rm = TRUE)
 
