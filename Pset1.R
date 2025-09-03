@@ -13,6 +13,10 @@ geih_data <- read_csv("https://raw.githubusercontent.com/9marlon9/ProblemSet1/re
 #Variables en la base:
 names(geih_data)
 
+#Mantener salarios positivos. 
+
+geih_data <- subset(geih_data, y_salary_m_hu > 0)
+
 
 # 3. Variable explicada (Y) (Salario por hora) ================================
 
@@ -60,3 +64,15 @@ ggplot(geih_data, aes(x = y_salary_m_hu)) +
 #4.1 Totalhoursworked
 skim(geih_data$totalhoursworked)
 min(geih_data$totalhoursworked)
+
+skim(geih_data$maxeduclevel)
+
+ggplot(geih_data, aes(x = maxeduclevel)) +
+  geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
+  labs(title = "Distribución del nivel educativo",
+       x = "Salario ",
+       y = "Frecuencia") +
+  scale_x_continuous(labels = comma)
+
+
+
