@@ -2,7 +2,8 @@
 
 install.packages("pacman")
 library(pacman)
-p_load(readr,rio,tidyverse,skimr,visdat, corrplot,stargazer, scales, haven)  
+library(dplyr)
+p_load(readr,rio,tidyverse,skimr,visdat, corrplot,stargazer, scales, haven, dplyr)  
 
 # 1. Importación de datos GitHub ========================================
 
@@ -13,9 +14,14 @@ geih_data <- read_csv("https://raw.githubusercontent.com/9marlon9/ProblemSet1/re
 #Variables en la base:
 names(geih_data)
 
+geih_data <- geih_data %>% 
+  rename(Experiencia = p6426)
+
+
 #Mantener salarios positivos. 
 
 geih_data <- subset(geih_data, y_salary_m_hu > 0)
+
 
 
 # 3. Variable explicada (Y) (Salario por hora) ================================
@@ -67,12 +73,88 @@ min(geih_data$totalhoursworked)
 
 skim(geih_data$maxeduclevel)
 
-ggplot(geih_data, aes(x = maxeduclevel)) +
+#Tratamiento de datos del regimen de salud
+
+ggplot(geih_data, aes(x = regsalud)) +
   geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
-  labs(title = "Distribución del nivel educativo",
-       x = "Salario ",
+  labs(title = "Distribución del regimen de salud",
+       x = "Tipo ",
+       y = "Frecuencia") +
+  scale_x_continuous(labels = comma)
+
+# calculamos el valor más común de regsalud. 
+mode_reg <- as.numeric(names(sort(table(geih_data$regsalud), decreasing = TRUE)[1]))
+
+# imputación de datos faltantes 
+geih_data <- geih_data  %>%
+  mutate(regsalud = ifelse(is.na(regsalud) == TRUE, mode_reg , regsalud))
+skim(geih_data$regsalud)
+
+#Tipo de vinculación#
+
+skim(geih_data$relab)
+
+ggplot(geih_data, aes(x = relab)) +
+  geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
+  labs(title = "Distribución del regimen de salud",
+       x = "Tipo ",
+       y = "Frecuencia") +
+  scale_x_continuous(labels = comma)
+
+#Es formal o informal#
+
+skim(geih_data$formal)
+
+ggplot(geih_data, aes(x = formal)) +
+  geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
+  labs(title = "Distribución de formalidad",
+       x = "Tipo ",
        y = "Frecuencia") +
   scale_x_continuous(labels = comma)
 
 
+ggplot(geih_data, aes(x = sizefirm)) +
+  geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
+  labs(title = "Distribución del tamaño de la firma",
+       x = "Tipo ",
+       y = "Frecuencia") +
+  scale_x_continuous(labels = comma)
 
+
+#Experiencia, frecuencia en meses#
+#Transformación de la variable de meses a años#
+
+geih_data$Experiencia <- geih_data$Experiencia / 12
+
+skim(geih_data$Experiencia)
+
+
+max(geih_data$Experiencia)
+
+
+ggplot(geih_data, aes(x = Experiencia)) +
+  geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
+  labs(title = "Distribución de experiencia",
+       x = "Tipo ",
+       y = "Frecuencia") +
+  scale_x_continuous(labels = comma)
+
+p95 <- quantile(geih_data$Experiencia, 0.95, na.rm = TRUE)
+
+ggplot(geih_data, aes(x = Experiencia)) +
+  geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
+  labs(title = "Distribución de experiencia",
+       x = "Tipo",
+       y = "Frecuencia") +
+  scale_x_continuous(labels = comma) +
+  coord_cartesian(xlim = c(0, p95)) 
+
+skim(geih_data$totalhoursworked)
+
+
+ggplot(geih_data, aes(x = totalhoursworked)) +
+  geom_histogram(bins = 30, fill = "steelblue", na.rm = TRUE) +
+  labs(title = "Distribución de experiencia",
+       x = "Tipo ",
+       y = "Frecuencia") +
+  scale_x_continuous(labels = comma)
