@@ -94,7 +94,7 @@ if __name__ == "__main__":
 # =============================================================================
 import pandas as pd
 # Variables que quieres conservar
-variables = ['y_salary_m_hu', 'sex', 'age', 'maxeduclevel', 'sizefirm','depto','hoursworkusual','cuentapropia','totalhoursworked','estrato1', 'relab','regsalud', 'formal']
+variables = ['y_salary_m_hu', 'y_inglab_m_ha', 'estrato1','sex', 'age','regsalud', 'maxeduclevel', 'p6426', 'sizefirm','totalhoursworked', 'relab', 'formal']
 
 # Leer el CSV filtrado y conservar solo las variables especificadas
 df = pd.read_csv("geih_data/GEIH2018_age_employed_filtered.csv")
